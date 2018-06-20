@@ -154,10 +154,22 @@ function Log-Write {
 	Param ([string]$logstring)
 	If ($Logfile)
 	{
+		if(Test-Path $Logfile)
+		{
+		    Add-content $Logfile -value $logstring
+		}
+		else
+		{
+		$parentLogs = Split-Path -Path $Logfile
+		If(!(test-path $parentLogs))
+		{
+		      New-Item -ItemType Directory -Force -Path $parentLogs     
+		}
+		New-Item "$Logfile" -ItemType file
 		Add-content $Logfile -value $logstring
+		}
 	}
 }
-
 function restart_GPU {
 	if (Test-Path devcon.exe) {
 		#disabling gpu's
